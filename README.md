@@ -1,7 +1,7 @@
 # 桌面待办日历
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
-[![Release](https://img.shields.io/github/v/release/Pia-JI/desktop-todo-calendar)](../../releases)
+[![Release](https://img.shields.io/github/v/release/Pia-JI/Desktop-Todo-Calendar)](../../releases)
 [![Tauri](https://img.shields.io/badge/Tauri-2-24C8DB.svg)](https://tauri.app)
 [![React](https://img.shields.io/badge/React-19-61DAFB.svg)](https://react.dev)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)](#平台支持)
