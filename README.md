@@ -1,6 +1,7 @@
 # 桌面待办日历
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+[![Release](https://img.shields.io/github/v/release/Pia-JI/desktop-todo-calendar)](../../releases)
 [![Tauri](https://img.shields.io/badge/Tauri-2-24C8DB.svg)](https://tauri.app)
 [![React](https://img.shields.io/badge/React-19-61DAFB.svg)](https://react.dev)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)](#平台支持)
@@ -52,8 +53,8 @@
 
 | 文件 | 说明 |
 | --- | --- |
-| `DesktopTodoCalendar_0.1.0_x64-setup.exe` | NSIS 安装程序，当前用户安装，免管理员权限 |
-| `桌面待办日历.exe` | 免安装版，双击即用（前端资源与图标已内嵌） |
+| `DesktopTodoCalendar_0.1.0_x64-setup.exe` | NSIS 安装程序（2.6 MB），当前用户安装，免管理员权限 |
+| `DesktopTodoCalendar_0.1.0_x64.exe` | 免安装版（8 MB），双击即用，前端资源与图标已内嵌 |
 
 只需要系统自带的 **WebView2 Runtime**（Win10/11 一般已预装），其余全部打包进 exe。
 
