@@ -1,0 +1,29 @@
+# 依赖与构建产物
+node_modules
+dist
+dist-ssr
+src-tauri/target
+src-tauri/gen/schemas
+release
+*.exe
+*.msi
+
+# 本地缓存
+*.local
+.tsbuildinfo
+*.tsbuildinfo
+install.log
+*.log
+
+# 环境文件与凭据（绝不提交）
+.env
+.env.*
+*.pem
+*.key
+*.p12
+
+# 本地工具与系统文件
+.workbuddy/
+.idea/
+.DS_Store
+Thumbs.db

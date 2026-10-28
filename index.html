@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>桌面待办日历</title>
+    <style>
+      /* 首屏骨架：在 JS 载入前先绘制底色，避免白闪，帮助满足冷启动 ≤2s 的观感目标 */
+      html, body, #root { height: 100%; margin: 0; background: transparent; }
+      #boot {
+        position: fixed; inset: 0; display: grid; place-items: center;
+        font-family: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+        color: #9aa0b0; font-size: 12px; letter-spacing: .04em;
+      }
+      #boot .bar {
+        width: 96px; height: 3px; border-radius: 999px; overflow: hidden;
+        background: rgba(140,150,175,.18); margin-top: 10px;
+      }
+      #boot .bar > i {
+        display: block; height: 100%; width: 40%; border-radius: 999px;
+        background: #4f6ef7; animation: boot 1.05s cubic-bezier(.4,0,.6,1) infinite;
+      }
+      @keyframes boot { 0% { transform: translateX(-110%);} 100% { transform: translateX(260%);} }
+      @media (prefers-reduced-motion: reduce) { #boot .bar > i { animation: none; width: 100%; } }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <div id="boot"><div style="text-align:center">桌面待办日历<div class="bar"><i></i></div></div></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

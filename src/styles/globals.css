@@ -1,0 +1,440 @@
+@import "./themes.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+    background: transparent; /* Tauri 透明窗口：页面本身必须透明 */
+  }
+
+  body {
+    @apply font-sans text-text antialiased;
+    font-size: 13px;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  input,
+  textarea,
+  [contenteditable] {
+    user-select: text;
+  }
+
+  /* 三态：focus-visible 用 2px 主色外环 */
+  :focus-visible {
+    outline: 2px solid rgb(var(--c-primary));
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  ::selection {
+    background: rgb(var(--c-primary) / 0.25);
+  }
+}
+
+@layer components {
+  /*
+   * 液态玻璃：系统亚克力负责模糊桌面，前端只铺一层半透明高光和细描边。
+   * 不再使用大面积 box-shadow：透明窗口上的阴影会变成窗口边缘那圈淡黑边。
+   */
+  .glass {
+    background:
+      linear-gradient(180deg, rgb(255 255 255 / 0.22), rgb(255 255 255 / 0.04)),
+      rgb(var(--c-glass) / var(--c-glass-alpha));
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.38),
+      inset 0 -1px 0 rgb(255 255 255 / 0.06);
+  }
+
+  .liquid-glass {
+    --dock-alpha: 0.18;
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(120% 90% at 16% -10%, rgb(255 255 255 / 0.62), transparent 46%),
+      linear-gradient(180deg, rgb(255 255 255 / 0.28), rgb(255 255 255 / 0.05) 36%, rgb(var(--c-glass) / 0.08)),
+      rgb(var(--c-glass) / var(--dock-alpha));
+    transition: background-color 180ms ease;
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.72),
+      inset 0 -1px 0 rgb(255 255 255 / 0.16),
+      inset 1px 0 0 rgb(255 255 255 / 0.22),
+      inset -1px 0 0 rgb(15 23 42 / 0.05);
+  }
+
+  .liquid-glass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: linear-gradient(115deg, rgb(255 255 255 / 0.5) 0%, rgb(255 255 255 / 0.12) 26%, transparent 48%);
+  }
+
+  .liquid-glass::after {
+    content: "";
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    top: 0;
+    height: 46%;
+    border-radius: 999px;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.28), transparent);
+    filter: blur(6px);
+    opacity: 0.9;
+  }
+
+  [data-theme="dark"] .glass,
+  [data-theme="system"] .glass {
+    background:
+      linear-gradient(180deg, rgb(255 255 255 / 0.08), rgb(255 255 255 / 0.02)),
+      rgb(var(--c-glass) / var(--c-glass-alpha));
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.14),
+      inset 0 -1px 0 rgb(0 0 0 / 0.28);
+  }
+
+  [data-theme="dark"] .liquid-glass,
+  [data-theme="system"] .liquid-glass {
+    background:
+      radial-gradient(120% 90% at 16% -10%, rgb(255 255 255 / 0.2), transparent 48%),
+      linear-gradient(180deg, rgb(255 255 255 / 0.12), rgb(255 255 255 / 0.03) 40%, rgb(var(--c-glass) / 0.16)),
+      rgb(var(--c-glass) / var(--dock-alpha));
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.28),
+      inset 0 -1px 0 rgb(0 0 0 / 0.22),
+      inset 1px 0 0 rgb(255 255 255 / 0.08),
+      inset -1px 0 0 rgb(0 0 0 / 0.2);
+  }
+
+  [data-theme="dark"] .liquid-glass::before,
+  [data-theme="system"] .liquid-glass::before {
+    background: linear-gradient(115deg, rgb(255 255 255 / 0.18) 0%, rgb(255 255 255 / 0.05) 28%, transparent 52%);
+  }
+
+  [data-theme="dark"] .liquid-glass::after,
+  [data-theme="system"] .liquid-glass::after {
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.12), transparent);
+    opacity: 0.55;
+  }
+
+  @media (prefers-color-scheme: light) {
+    [data-theme="system"] .glass {
+      background:
+        linear-gradient(180deg, rgb(255 255 255 / 0.22), rgb(255 255 255 / 0.04)),
+        rgb(var(--c-glass) / var(--c-glass-alpha));
+      box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / 0.38),
+        inset 0 -1px 0 rgb(255 255 255 / 0.06);
+    }
+    [data-theme="system"] .liquid-glass {
+      background:
+        radial-gradient(120% 90% at 16% -10%, rgb(255 255 255 / 0.62), transparent 46%),
+        linear-gradient(180deg, rgb(255 255 255 / 0.28), rgb(255 255 255 / 0.05) 36%, rgb(var(--c-glass) / 0.08)),
+        rgb(var(--c-glass) / var(--dock-alpha));
+      box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / 0.72),
+        inset 0 -1px 0 rgb(255 255 255 / 0.16),
+        inset 1px 0 0 rgb(255 255 255 / 0.22),
+        inset -1px 0 0 rgb(15 23 42 / 0.05);
+    }
+    [data-theme="system"] .liquid-glass::before {
+      background: linear-gradient(115deg, rgb(255 255 255 / 0.5) 0%, rgb(255 255 255 / 0.12) 26%, transparent 48%);
+    }
+    [data-theme="system"] .liquid-glass::after {
+      background: linear-gradient(180deg, rgb(255 255 255 / 0.28), transparent);
+      opacity: 0.9;
+    }
+  }
+
+  .liquid-glass.dock-focused {
+    --dock-alpha: 0.78;
+  }
+
+  /*
+   * 失焦（常驻桌面）态的 Dock：桌面壁纸颜色不可控，45% 白玻璃会让次级灰字糊掉。
+   * 这里把底色抬到接近不透明，并按主题给出各自的文字底色，保证任何壁纸上都读得清。
+   */
+  [data-theme] .liquid-glass:not(.dock-focused) {
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.82), rgb(255 255 255 / 0.68));
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.6),
+      inset 0 0 0 1px rgb(15 23 42 / 0.06);
+  }
+
+  [data-theme] .liquid-glass:not(.dock-focused)::before,
+  [data-theme] .liquid-glass:not(.dock-focused)::after {
+    opacity: 0;
+  }
+
+  [data-theme="dark"] .liquid-glass:not(.dock-focused),
+  [data-theme="system"] .liquid-glass:not(.dock-focused) {
+    background: linear-gradient(180deg, rgb(30 34 46 / 0.88), rgb(20 23 32 / 0.8));
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.12),
+      inset 0 0 0 1px rgb(0 0 0 / 0.35);
+  }
+
+  @media (prefers-color-scheme: light) {
+    [data-theme="system"] .liquid-glass:not(.dock-focused) {
+      background: linear-gradient(180deg, rgb(255 255 255 / 0.82), rgb(255 255 255 / 0.68));
+      box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / 0.6),
+        inset 0 0 0 1px rgb(15 23 42 / 0.06);
+    }
+  }
+
+  .sheet {
+    background: rgb(var(--c-surface));
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.28);
+  }
+
+  /*
+   * 命令面板：遮罩固定不透明度、不做逐帧动画。
+   * 透明窗口 + 系统亚克力下，整窗半透明层逐帧改 opacity 会让 DWM 每帧重组整块窗口，
+   * 表现为「打开面板时界面闪一下」。入退场只作用在小面板上，且走合成层动画。
+   */
+  .palette-backdrop {
+    background: rgb(15 23 42 / 0.26);
+  }
+
+  [data-theme="dark"] .palette-backdrop,
+  [data-theme="system"] .palette-backdrop {
+    background: rgb(0 0 0 / 0.42);
+  }
+
+  @media (prefers-color-scheme: light) {
+    [data-theme="system"] .palette-backdrop {
+      background: rgb(15 23 42 / 0.26);
+    }
+  }
+
+  .palette-panel {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+  }
+
+  .palette-open .palette-panel {
+    animation: palette-in 140ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .palette-closing .palette-panel {
+    animation: palette-out 110ms ease-in both;
+  }
+
+  [data-theme="dark"] .sheet,
+  [data-theme="system"] .sheet {
+    background: rgb(var(--c-surface));
+  }
+
+  @media (prefers-color-scheme: light) {
+    [data-theme="system"] .sheet {
+      background: rgb(var(--c-surface));
+    }
+  }
+
+  .app-shell {
+    position: absolute;
+    inset: 0;
+    transform-origin: bottom right;
+  }
+
+  .app-shell-inactive {
+    display: none;
+    pointer-events: none;
+  }
+
+  /* 仅冷启动淡入一次；形变时不重播，否则「收起→展开」每次都像闪一下 */
+  .app-booting .app-shell {
+    animation: shell-enter 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* 形变期间藏住内容：透明窗口原地改尺寸会先看到一帧被挤压的旧布局 */
+  .window-transitioning .app-shell,
+  .window-morphing .app-shell {
+    visibility: hidden;
+    animation: none;
+  }
+
+  .calendar-page {
+    animation: page-enter 180ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .view-tabs {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, 28px);
+    flex-shrink: 0;
+    padding: 2px;
+    border-radius: 8px;
+    background: rgb(var(--c-surface-2));
+  }
+
+  .view-tab-indicator {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 28px;
+    height: 24px;
+    border-radius: 6px;
+    background: rgb(var(--c-surface));
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.12);
+    transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+  }
+
+  .view-tab {
+    position: relative;
+    height: 24px;
+    transition: color 150ms, transform 150ms;
+  }
+
+  .view-tab:active {
+    transform: scale(0.88);
+  }
+
+  .card {
+    @apply bg-surface border border-border rounded-card shadow-soft;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-lg px-2.5 h-8 text-xs font-medium
+      transition-[color,background-color,box-shadow,transform] duration-150 ease-spring select-none
+      hover:-translate-y-px active:translate-y-0 active:scale-[0.98]
+      disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary text-white shadow-soft hover:shadow-lift;
+  }
+
+  .btn-ghost {
+    @apply btn text-muted hover:bg-surface-2 hover:text-text;
+  }
+
+  .btn-danger {
+    @apply btn bg-danger/10 text-danger hover:bg-danger/20;
+  }
+
+  .icon-btn {
+    @apply inline-flex items-center justify-center w-8 h-8 rounded-lg text-muted
+      shrink-0 transition-[color,background-color,transform] duration-150 ease-spring hover:bg-surface-2 hover:text-text active:scale-90;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-md px-1.5 h-5 text-2xs font-medium;
+  }
+
+  .input {
+    @apply w-full h-8 px-2.5 rounded-lg bg-surface-2 border border-transparent text-text text-xs
+      placeholder:text-muted/70 transition-colors focus:border-primary/50 focus:bg-surface outline-none;
+  }
+
+  .scroll-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--c-border)) transparent;
+  }
+  .scroll-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scroll-thin::-webkit-scrollbar-thumb {
+    background: rgb(var(--c-border));
+    border-radius: 999px;
+  }
+  .scroll-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  /* 只读外部日历：斜线纹理区分「我的待办」 */
+  .readonly-hatch {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      rgb(var(--c-muted) / 0.16) 0 3px,
+      transparent 3px 7px
+    );
+  }
+
+  .skeleton {
+    @apply rounded-md;
+    background: linear-gradient(
+      90deg,
+      rgb(var(--c-surface-2)) 25%,
+      rgb(var(--c-surface-3)) 37%,
+      rgb(var(--c-surface-2)) 63%
+    );
+    background-size: 420px 100%;
+    @apply animate-shimmer;
+  }
+}
+
+@keyframes shell-enter {
+  from { opacity: 0; transform: translateY(6px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/*
+ * Dock 次级文案（写在 @layer 之外）：需要压过 .icon-btn / tailwind text-muted 的 color，
+ * 未分层的样式优先级高于 @layer 内的样式，正好用来做这一层覆盖。
+ */
+.dock-sub {
+  color: rgb(var(--c-dock-sub));
+  text-shadow: 0 1px 0 rgb(255 255 255 / 0.5);
+}
+
+[data-theme="dark"] .dock-sub,
+[data-theme="system"] .dock-sub {
+  text-shadow: 0 1px 1px rgb(0 0 0 / 0.5);
+}
+
+@media (prefers-color-scheme: light) {
+  [data-theme="system"] .dock-sub {
+    text-shadow: 0 1px 0 rgb(255 255 255 / 0.5);
+  }
+}
+
+@keyframes palette-in {
+  from { opacity: 0; transform: translate3d(0, -6px, 0) scale(0.995); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
+@keyframes palette-out {
+  from { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+  to { opacity: 0; transform: translate3d(0, -4px, 0) scale(0.995); }
+}
+
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@layer utilities {
+  .no-drag {
+    -webkit-app-region: no-drag;
+  }
+  .drag-region {
+    -webkit-app-region: drag;
+  }
+}
+
+/* 尊重系统「减少动态效果」：全部降级为 opacity 切换 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

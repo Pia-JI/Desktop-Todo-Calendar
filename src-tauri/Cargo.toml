@@ -1,0 +1,51 @@
+[package]
+name = "desktop-todo-calendar"
+version = "0.1.0"
+description = "桌面待办日历 · 常驻桌面的轻量待办日历"
+authors = ["Desktop Todo Calendar contributors"]
+license = "MIT"
+edition = "2021"
+rust-version = "1.77.2"
+
+# 库名必须与 lib.rs 中 #[cfg_attr(mobile, tauri::mobile_entry_point)] 的入口一致
+[lib]
+name = "desktop_todo_calendar_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["protocol-asset", "macos-private-api", "tray-icon", "image-png"] }
+tauri-plugin-sql = { version = "2", features = ["sqlite"] }
+tauri-plugin-notification = "2"
+tauri-plugin-global-shortcut = "2"
+tauri-plugin-autostart = "2"
+tauri-plugin-shell = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-fs = "2"
+tauri-plugin-os = "2"
+tauri-plugin-process = "2"
+tauri-plugin-single-instance = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio", "sqlite"] }
+tokio = { version = "1", features = ["time", "sync", "fs", "io-util", "macros", "rt-multi-thread"] }
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1", features = ["v4", "serde"] }
+thiserror = "2"
+log = "0.4"
+
+# Windows 上直接调 winrt toast 发送，才能拿到真实错误（插件把 show() 丢进 spawn 里吞掉了）
+# windows 只为了写 HKCU\Software\Classes\AppUserModelId（未打包 Win32 应用弹 toast 的前提）
+[target.'cfg(windows)'.dependencies]
+tauri-winrt-notification = "0.7"
+windows = { version = "0.61", features = ["Win32_Foundation", "Win32_System_Registry"] }
+
+[profile.release]
+# 体积优先：安装包 < 60MB 目标
+codegen-units = 8
+lto = "thin"
+opt-level = "s"
+panic = "abort"
+strip = true

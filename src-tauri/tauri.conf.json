@@ -1,0 +1,78 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "DesktopTodoCalendar",
+  "version": "0.1.0",
+  "identifier": "com.desktop.todocalendar",
+  "build": {
+    "beforeDevCommand": "pnpm dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "pnpm build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "macOSPrivateApi": true,
+    "withGlobalTauri": false,
+    "security": {
+      "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' asset: http://asset.localhost blob: data:; font-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost asset: http://asset.localhost",
+      "assetProtocol": {
+        "enable": true,
+        "scope": ["$APPDATA/**", "$APPCONFIG/**"]
+      }
+    },
+    "windows": [
+      {
+        "label": "main",
+        "title": "桌面待办日历",
+        "width": 264,
+        "height": 44,
+        "minWidth": 168,
+        "minHeight": 44,
+        "resizable": false,
+        "maximizable": false,
+        "minimizable": false,
+        "fullscreen": false,
+        "decorations": false,
+        "transparent": true,
+        "shadow": false,
+        "alwaysOnTop": true,
+        "skipTaskbar": true,
+        "visible": false,
+        "center": false,
+        "acceptFirstMouse": true,
+        "dragDropEnabled": false,
+        "url": "index.html"
+      }
+    ]
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "category": "Productivity",
+    "shortDescription": "常驻桌面的轻量待办日历",
+    "longDescription": "一个常驻桌面右下角的轻量待办日历：收缩态小长条，点击展开月历，支持拖拽待办、系统提醒、番茄钟、农历与节假日、ICS/JSON 导入导出，全部离线本地运行。",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser",
+        "languages": ["SimpChinese", "English"],
+        "displayLanguageSelector": false
+      }
+    },
+    "macOS": {
+      "minimumSystemVersion": "10.15"
+    },
+    "linux": {
+      "deb": { "depends": ["libwebkit2gtk-4.1-0", "libgtk-3-0"] }
+    }
+  },
+  "plugins": {
+    "sql": { "preload": [] },
+    "shell": { "open": true }
+  }
+}
